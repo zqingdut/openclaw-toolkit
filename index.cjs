@@ -35,15 +35,24 @@ async function main() {
   log('\n1. 🛠️  Generate Config (Fix API Keys/Models)');
   log('2. 🩺  Check Network & API Connection');
   log('3. 🐕  Install Watchdog (Auto-Restart)');
-  log('4. 🚪  Exit');
+  log('4. 🌐  Launch Web UI (New!)', colors.green);
+  log('5. 🚪  Exit');
 
-  const choice = await ask('\nChoose an option (1-4): ');
+  const choice = await ask('\nChoose an option (1-5): ');
 
   switch (choice.trim()) {
     case '1': await generateConfig(); break;
     case '2': await checkNetwork(); break;
     case '3': await installWatchdog(); break;
     case '4': 
+      const { spawn } = require('child_process');
+      const serverPath = path.join(__dirname, 'server.cjs');
+      log('Starting Web UI...', colors.cyan);
+      const child = spawn('node', [serverPath], { stdio: 'inherit' });
+      // Keep parent alive
+      await new Promise(() => {}); 
+      break;
+    case '5': 
       log('Bye! Happy Clawing. 🦞', colors.blue);
       process.exit(0);
       break;
